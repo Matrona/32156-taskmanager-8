@@ -2,7 +2,7 @@
 
 // Filter
 
-const createFilterElement = function (caption, amount, isChecked = false) {
+const createFilterElement = (caption, amount, isChecked = false) => {
 
   let isDisabled;
 
@@ -18,8 +18,8 @@ const createFilterElement = function (caption, amount, isChecked = false) {
       id="filter__${caption.toLowerCase()}"
       class="filter__input visually-hidden"
       name="filter"
-      ${isChecked ? " checked" : ""}
-      ${isDisabled ? " disabled" : ""}
+      ${isChecked ? ` checked` : ``}
+      ${isDisabled ? ` disabled` : ``}
     />
     <label for="filter__${caption.toLowerCase()}" class="filter__label">${caption} <span class="filter__${caption.toLowerCase()}-count">${amount}</span></label>
   `;
@@ -37,26 +37,25 @@ const filterElementsArray = [
 
 const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 
-const filterElementsLabels = document.getElementsByClassName("filter__label");
-const cardContainer = document.getElementsByClassName("board__tasks")[0];
-
 // Отрисовываем все фильтры
 
-filterElementsArray.forEach(function(item) {
-  document.getElementsByClassName("main__filter")[0].insertAdjacentHTML(`beforeend`, createFilterElement(item[0], random(0, 15), item[1], item[2]));
+filterElementsArray.forEach((item) => {
+  document.querySelector(`.main__filter`).insertAdjacentHTML(`beforeend`, createFilterElement(item[0], random(0, 15), item[1]));
 });
 
 // Добавляем каждому фильтру обработчик события click
 
-for(let i=0; i< filterElementsLabels.length; i++){
-  filterElementsLabels[i].addEventListener(`click`, function(){
+const filterElementsLabels = document.querySelectorAll(`.filter__label`);
+
+filterElementsLabels.forEach((label) => {
+  label.addEventListener(`click`, () => {
     showCards(random(0, 15));
   });
-}
+});
 
 // Card
 
-const createCard = function () {
+const createCard = () => {
   return `
     <article class="card">
       <form class="card__form" method="get">
@@ -306,15 +305,16 @@ const createCard = function () {
       </form>
     </article>
   `;
-}
+};
 
-const showCards = function (num) {
-  while (cardContainer.firstChild) {
-    cardContainer.removeChild(cardContainer.firstChild);
-  }
+const cardContainer = document.querySelector(`.board__tasks`);
+
+const showCards = (num) => {
+  cardContainer.innerHTML = ``;
+
   for (let i = 1; i <= num; i++) {
     cardContainer.insertAdjacentHTML(`beforeend`, createCard());
   }
-}
+};
 
 showCards(7);
