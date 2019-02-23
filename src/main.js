@@ -38,7 +38,7 @@ showFilter(filterContainer);
 
 const filterElementsLabels = document.querySelectorAll(`.filter__label`);
 
-[].map.call(filterElementsLabels, (label) => {
+filterElementsLabels.forEach((label) => {
   label.addEventListener(`click`, () => {
     showCards(random(0, 15));
   });

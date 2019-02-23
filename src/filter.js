@@ -1,11 +1,9 @@
 export default (caption, amount, isChecked = false) => {
 
-  let isDisabled;
+  let isDisabled = false;
 
   if (amount <= 0) {
     isDisabled = true;
-  } else {
-    isDisabled = false;
   }
 
   return `
