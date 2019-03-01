@@ -1,5 +1,38 @@
-export default () => `
-  <article class="card">
+const createTag = (tags) => {
+  return tags.map((tag) => `
+  <span class="card__hashtag-inner">
+    <input type="hidden" name="hashtag" value="repeat" class="card__hashtag-hidden-input" />
+    <button type="button" class="card__hashtag-name">#${tag}</button>
+    <button type="button" class="card__hashtag-delete"> delete</button>
+  </span>
+  `).join(``);
+};
+
+const formatDate = (date) => {
+  const monthNames = [
+    `January`, `February`, `March`,
+    `April`, `May`, `June`, `July`,
+    `August`, `September`, `October`,
+    `November`, `December`
+  ];
+
+  const day = date.getDate();
+  const monthIndex = date.getMonth();
+  return day + ` ` + monthNames[monthIndex];
+};
+
+const formatTime = (time) => {
+  let hours = time.getHours();
+  let minutes = time.getMinutes();
+  const ampm = hours >= 12 ? `PM` : `AM`;
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? `0` + minutes : minutes;
+  return hours + `:` + minutes + ` ` + ampm;
+};
+
+export default (data) => `
+  <article class="card card--${data.color}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
@@ -11,14 +44,14 @@ export default () => `
           </button>
           <button
             type="button"
-            class="card__btn card__btn--favorites card__btn--disabled"
+            class="card__btn card__btn--favorites ${!data.isFavorite ? `card__btn--disabled` : ``}"
           >
             favorites
           </button>
         </div>
 
         <div class="card__color-bar">
-          <svg width="100%" height="10">
+          <svg class="card__color-bar-wave" width="100%" height="10">
             <use xlink:href="#wave"></use>
           </svg>
         </div>
@@ -29,9 +62,7 @@ export default () => `
               class="card__text"
               placeholder="Start typing your text here..."
               name="text"
-            >
-This is example of new task, you can add picture, set date and time, add tags.</textarea
-            >
+            >${data.title}</textarea>
           </label>
         </div>
 
@@ -47,7 +78,7 @@ This is example of new task, you can add picture, set date and time, add tags.</
                   <input
                     class="card__date"
                     type="text"
-                    placeholder="23 September"
+                    placeholder="${formatDate(data.dueDate)}"
                     name="date"
                   />
                 </label>
@@ -55,7 +86,7 @@ This is example of new task, you can add picture, set date and time, add tags.</
                   <input
                     class="card__time"
                     type="text"
-                    placeholder="11:15 PM"
+                    placeholder="${formatTime(data.dueDate)}"
                     name="time"
                   />
                 </label>
@@ -73,6 +104,7 @@ This is example of new task, you can add picture, set date and time, add tags.</
                     id="repeat-mo-1"
                     name="repeat"
                     value="mo"
+                    ${data.repeatingDays.mo ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-mo-1"
                     >mo</label
@@ -83,7 +115,7 @@ This is example of new task, you can add picture, set date and time, add tags.</
                     id="repeat-tu-1"
                     name="repeat"
                     value="tu"
-                    checked
+                    ${data.repeatingDays.tu ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-tu-1"
                     >tu</label
@@ -94,6 +126,7 @@ This is example of new task, you can add picture, set date and time, add tags.</
                     id="repeat-we-1"
                     name="repeat"
                     value="we"
+                    ${data.repeatingDays.we ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-we-1"
                     >we</label
@@ -104,6 +137,7 @@ This is example of new task, you can add picture, set date and time, add tags.</
                     id="repeat-th-1"
                     name="repeat"
                     value="th"
+                    ${data.repeatingDays.th ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-th-1"
                     >th</label
@@ -114,7 +148,7 @@ This is example of new task, you can add picture, set date and time, add tags.</
                     id="repeat-fr-1"
                     name="repeat"
                     value="fr"
-                    checked
+                    ${data.repeatingDays.fr ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-fr-1"
                     >fr</label
@@ -125,6 +159,7 @@ This is example of new task, you can add picture, set date and time, add tags.</
                     name="repeat"
                     value="sa"
                     id="repeat-sa-1"
+                    ${data.repeatingDays.sa ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-sa-1"
                     >sa</label
@@ -135,7 +170,7 @@ This is example of new task, you can add picture, set date and time, add tags.</
                     id="repeat-su-1"
                     name="repeat"
                     value="su"
-                    checked
+                    ${data.repeatingDays.su ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-su-1"
                     >su</label
@@ -145,7 +180,9 @@ This is example of new task, you can add picture, set date and time, add tags.</
             </div>
 
             <div class="card__hashtag">
-              <div class="card__hashtag-list"></div>
+              <div class="card__hashtag-list">
+              ${createTag(data.tags)}
+              </div>
 
               <label>
                 <input
@@ -158,14 +195,14 @@ This is example of new task, you can add picture, set date and time, add tags.</
             </div>
           </div>
 
-          <label class="card__img-wrap card__img-wrap--empty">
+          <label class="card__img-wrap ${!data.picture ? `card__img-wrap--empty` : ``}">
             <input
               type="file"
               class="card__img-input visually-hidden"
               name="img"
             />
             <img
-              src="img/add-photo.svg"
+              src="${data.picture}"
               alt="task picture"
               class="card__img"
             />

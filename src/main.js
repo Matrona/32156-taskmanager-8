@@ -1,3 +1,4 @@
+import createRandomCard from './data.js';
 import createFilterElement from './filter.js';
 import createCard from './card.js';
 
@@ -19,7 +20,7 @@ const showCards = (num) => {
   cardContainer.innerHTML = ``;
 
   for (let i = 1; i <= num; i++) {
-    cardContainer.insertAdjacentHTML(`beforeend`, createCard());
+    cardContainer.insertAdjacentHTML(`beforeend`, createCard(createRandomCard()));
   }
 };
 
