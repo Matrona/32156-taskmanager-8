@@ -9,13 +9,7 @@ const createTag = (tags) => {
 };
 
 const formatDate = (date) => {
-  const monthNames = [
-    `January`, `February`, `March`,
-    `April`, `May`, `June`, `July`,
-    `August`, `September`, `October`,
-    `November`, `December`
-  ];
-
+  const monthNames = [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`];
   const day = date.getDate();
   const monthIndex = date.getMonth();
   return day + ` ` + monthNames[monthIndex];
@@ -29,6 +23,10 @@ const formatTime = (time) => {
   hours = hours ? hours : 12;
   minutes = minutes < 10 ? `0` + minutes : minutes;
   return hours + `:` + minutes + ` ` + ampm;
+};
+
+const isRepeatingDate = (days) => {
+  return Object.values(days).some((val) => val === true);
 };
 
 export default (data) => `
@@ -93,10 +91,10 @@ export default (data) => `
               </fieldset>
 
               <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">no</span>
+                repeat:<span class="card__repeat-status">${isRepeatingDate(data.repeatingDays) ? `yes` : `no`}</span>
               </button>
 
-              <fieldset class="card__repeat-days" disabled>
+              <fieldset class="card__repeat-days" ${!isRepeatingDate(data.repeatingDays) ? `disabled` : ``}>
                 <div class="card__repeat-days-inner">
                   <input
                     class="visually-hidden card__repeat-day-input"
