@@ -1,6 +1,8 @@
+import {random} from './utils.js';
 import createRandomCard from './data.js';
+import {Card} from './card/card.js';
+import {CardEdit} from './card/card-edit.js';
 import createFilterElement from './filter.js';
-import createCard from './card.js';
 
 // Filter
 
@@ -15,16 +17,37 @@ const filterElementsArray = [
   [`ARCHIVE`]
 ];
 
+// Card
+
 const cardContainer = document.querySelector(`.board__tasks`);
+
 const showCards = (num) => {
   cardContainer.innerHTML = ``;
 
+  const cardComponentData = [];
+  const cardComponent = [];
+  const editCardComponent = [];
+
   for (let i = 1; i <= num; i++) {
-    cardContainer.insertAdjacentHTML(`beforeend`, createCard(createRandomCard()));
+    cardComponentData[i] = createRandomCard();
+    cardComponent[i] = new Card(cardComponentData[i]);
+    editCardComponent[i] = new CardEdit(cardComponentData[i]);
+
+    cardComponent[i].onEdit = () => {
+      editCardComponent[i].render();
+      cardContainer.replaceChild(editCardComponent[i].element, cardComponent[i].element);
+      cardComponent[i].unrender();
+    };
+
+    editCardComponent[i].onSubmit = () => {
+      cardComponent[i].render();
+      cardContainer.replaceChild(cardComponent[i].element, editCardComponent[i].element);
+      editCardComponent[i].unrender();
+    };
+
+    cardContainer.appendChild(cardComponent[i].render());
   }
 };
-
-const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 
 // Отрисовываем все фильтры
 
