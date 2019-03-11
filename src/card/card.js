@@ -1,7 +1,8 @@
-import {createElement} from '../utils.js';
+import {Component} from '../component.js';
 
-export class Card {
+export class Card extends Component {
   constructor(data) {
+    super();
     this._title = data.title;
     this._tags = data.tags;
     this._picture = data.picture;
@@ -10,8 +11,8 @@ export class Card {
     this._isFavorite = data.isFavorite;
     this._isDone = data.isDone;
 
-    this._element = null;
     this._onEdit = null;
+    this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
   _createTag() {
@@ -29,17 +30,11 @@ export class Card {
   }
 
   _onEditButtonClick() {
-    if (typeof this._onEdit === `function`) {
-      this._onEdit();
-    }
+    return typeof this._onEdit === `function` && this._onEdit();
   }
 
   set onEdit(fn) {
     this._onEdit = fn;
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -115,22 +110,11 @@ export class Card {
     `.trim();
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
+  createListeners() {
+    this._element.querySelector(`.card__btn--edit`).addEventListener(`click`, this._onEditButtonClick);
   }
 
-  bind() {
-    this._element.querySelector(`.card__btn--edit`).addEventListener(`click`, this._onEditButtonClick.bind(this));
-  }
-
-  unbind() {
-    this._element.querySelector(`.card__btn--edit`).removeEventListener(`click`, this._onEditButtonClick.bind(this));
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
+  removeListeners() {
+    this._element.querySelector(`.card__btn--edit`).removeEventListener(`click`, this._onEditButtonClick);
   }
 }
