@@ -1,4 +1,6 @@
 import {Component} from '../component.js';
+import moment from 'moment';
+import {Color} from '../utils.js';
 
 export class Card extends Component {
   constructor(data) {
@@ -6,6 +8,7 @@ export class Card extends Component {
     this._title = data.title;
     this._tags = data.tags;
     this._picture = data.picture;
+    this._dueDate = data.dueDate;
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
     this._isFavorite = data.isFavorite;
@@ -18,7 +21,7 @@ export class Card extends Component {
   _createTag() {
     return this._tags.map((tag) => `
     <span class="card__hashtag-inner">
-      <input type="hidden" name="hashtag" value="repeat" class="card__hashtag-hidden-input" />
+      <input type="hidden" name="hashtag" value="${tag}" class="card__hashtag-hidden-input" />
       <button type="button" class="card__hashtag-name">#${tag}</button>
       <button type="button" class="card__hashtag-delete"> delete</button>
     </span>
@@ -39,7 +42,7 @@ export class Card extends Component {
 
   get template() {
     return `
-      <article class="card card--${this._color} ${this._isRepeatingDate() ? `card--repeat` : ``}">
+      <article class="card ${Color[this._color]} ${this._isRepeatingDate() ? `card--repeat` : ``}">
         <form class="card__form" method="get">
           <div class="card__inner">
             <div class="card__control">
@@ -75,19 +78,11 @@ export class Card extends Component {
 
             <div class="card__settings">
               <div class="card__details">
+                <div class="card__dates">${this._dueDate ? moment(this._dueDate).format(`DD MMMM hh:mm`) : ``}</div>
                 <div class="card__hashtag">
                   <div class="card__hashtag-list">
                   ${this._createTag()}
                   </div>
-
-                  <label>
-                    <input
-                      type="text"
-                      class="card__hashtag-input"
-                      name="hashtag-input"
-                      placeholder="Type new hashtag here"
-                    />
-                  </label>
                 </div>
               </div>
 
@@ -116,5 +111,13 @@ export class Card extends Component {
 
   removeListeners() {
     this._element.querySelector(`.card__btn--edit`).removeEventListener(`click`, this._onEditButtonClick);
+  }
+
+  update(data) {
+    this._title = data.title;
+    this._tags = data.tags;
+    this._color = data.color;
+    this._dueDate = data.dueDate;
+    this._repeatingDays = data.repeatingDays;
   }
 }

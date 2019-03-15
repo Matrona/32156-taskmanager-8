@@ -39,7 +39,14 @@ const showCards = (num) => {
       cardComponent[i].unrender();
     };
 
-    editCardComponent[i].onSubmit = () => {
+    editCardComponent[i].onSubmit = (newObject) => {
+      cardComponentData[i].title = newObject.title;
+      cardComponentData[i].tags = newObject.tags;
+      cardComponentData[i].color = newObject.color;
+      cardComponentData[i].repeatingDays = newObject.repeatingDays;
+      cardComponentData[i].dueDate = newObject.dueDate;
+
+      cardComponent[i].update(cardComponentData[i]);
       cardComponent[i].render();
       cardContainer.replaceChild(cardComponent[i].element, editCardComponent[i].element);
       editCardComponent[i].unrender();
