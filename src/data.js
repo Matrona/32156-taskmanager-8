@@ -1,4 +1,5 @@
 import {random, randomItem, randomBoolean} from './utils.js';
+import moment from 'moment';
 
 const titles = [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`];
 
@@ -28,10 +29,15 @@ const createRepeatingDays = (days) => {
 };
 
 const createRandomDate = () => {
-  return new Date(Date.now() - (7 * 24 * 60 * 60 * 1000) + Math.floor(Math.random() * 14 * 24 * 60 * 60 * 1000));
+  const randomDate = new Date(Date.now() - (7 * 24 * 60 * 60 * 1000) + Math.floor(Math.random() * 14 * 24 * 60 * 60 * 1000));
+  return {
+    date: moment(randomDate).format(`DD MMMM`),
+    time: moment(randomDate).format(`hh:mm A`)
+  };
 };
 
 export default () => ({
+  number: null,
   title: randomItem(titles),
   dueDate: createRandomDate(),
   tags: createRandomTags(tags),

@@ -30,6 +30,7 @@ const showCards = (num) => {
 
   for (let i = 1; i <= num; i++) {
     cardComponentData[i] = createRandomCard();
+    cardComponentData[i].number = i;
     cardComponent[i] = new Card(cardComponentData[i]);
     editCardComponent[i] = new CardEdit(cardComponentData[i]);
 

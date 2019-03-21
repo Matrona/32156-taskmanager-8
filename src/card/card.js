@@ -1,5 +1,4 @@
 import {Component} from '../component.js';
-import moment from 'moment';
 import {Color} from '../utils.js';
 
 export class Card extends Component {
@@ -42,7 +41,7 @@ export class Card extends Component {
 
   get template() {
     return `
-      <article class="card ${Color[this._color]} ${this._isRepeatingDate() ? `card--repeat` : ``}">
+      <article class="card ${Color[this._color]} ${this._isRepeatingDate() && `card--repeat`}">
         <form class="card__form" method="get">
           <div class="card__inner">
             <div class="card__control">
@@ -54,7 +53,7 @@ export class Card extends Component {
               </button>
               <button
                 type="button"
-                class="card__btn card__btn--favorites ${!this._isFavorite ? `card__btn--disabled` : ``}"
+                class="card__btn card__btn--favorites ${!this._isFavorite && `card__btn--disabled`}"
               >
                 favorites
               </button>
@@ -78,7 +77,7 @@ export class Card extends Component {
 
             <div class="card__settings">
               <div class="card__details">
-                <div class="card__dates">${this._dueDate ? moment(this._dueDate).format(`DD MMMM hh:mm`) : ``}</div>
+                <div class="card__dates">${this._dueDate.date}<br>${this._dueDate.time}</div>
                 <div class="card__hashtag">
                   <div class="card__hashtag-list">
                   ${this._createTag()}
@@ -86,7 +85,7 @@ export class Card extends Component {
                 </div>
               </div>
 
-              <label class="card__img-wrap ${!this._picture ? `card__img-wrap--empty` : ``}">
+              <label class="card__img-wrap ${!this._picture && `card__img-wrap--empty`}">
                 <input
                   type="file"
                   class="card__img-input visually-hidden"
